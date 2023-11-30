@@ -7,6 +7,10 @@
     <link href='style.css' rel='stylesheet'>
 </head>
 <body>
+    <?php include_once "db.php"; 
+	nav();
+	?>
+
     <div style="padding: 50px; margin-top: 3em;">
         <h1>Sign up for an account</h1>
 

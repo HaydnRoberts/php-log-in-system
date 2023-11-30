@@ -19,14 +19,18 @@ if (isset($_SESSION["user"])) {
 </head>
 <body>
 
-	<?php include_once "db.php"; 
+    <?php include_once "db.php"; 
 	nav();
 	?>
 
-	<h1>Welcome to Muppet Chat!</h1>
+	<h1>Account</h1>
 	<?php if ($logged_in): ?>
-		<p> Welcome <?= $user->email; ?> </p>
-		<p> *insert fyp here* </p>	
+		<p> <?= $user->email; ?> </p>
+
+		<div class="container">
+            
+			<a href="logout.php" class="btn">Log out</a>
+		</div>	
 	<?php else: ?>
 		<div class="container">
 			<p>Join the fun and chat with your favorite Muppets!</p>
