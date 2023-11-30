@@ -12,6 +12,7 @@ class User {
     public $password = "";
     public $password_hash = "";
     public $token = "";
+    public $authenticated = false;
     public $connection;
 
     function __construct($connection, $email, $password) {
@@ -43,5 +44,23 @@ class User {
         if (! $sqlQuery) {
             die("MySql query failed" . mysqli_error($this->connection));
         };
+    }
+
+    function authenticate() {
+        $sql = "
+        SELECT id, email, password, token, is_active
+        From users
+        WHERE email=\"{$this->email}\"
+        ";
+        $result = $this->connection->query($sql);
+        if ($row = $result->fetch_assoc()) {
+            if (password_verify($this->password, $row["password"])) {
+                $this->authenticated = true;
+            }
+        }
+    }
+
+    function is_logged_in() {
+        return $this->authenticated;
     }
 }
