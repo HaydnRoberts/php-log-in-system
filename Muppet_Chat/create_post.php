@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,17 +10,19 @@
     <link href='style.css' rel='stylesheet'>
 </head>
 <body>
-    <?php include_once "db.php"; 
-	nav();
-	?>
+    <?php 
+    include_once "db.php"; 
+    nav();
+    ?>
     <h1>Create a post</h1>
     <div class="container">
-        <form action="post-action.php" method="post">
+        <form action="post_action.php" method="post" enctype="multipart/form-data">
             <p>Write your post</p>
-            <textarea></textarea>
+            <textarea name="post_content"></textarea>
             <p>Add an image</p>
-            <input type="file" accept="image/png, image/jpeg" />
-            <button type="submit">
+            <input type="file" name="post_image" accept="image/png, image/jpeg" />
+            <hr>
+            <button type="submit" class="btn">POST!</button>
         </form>
     </div>
 </body>

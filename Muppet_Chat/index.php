@@ -26,7 +26,26 @@ if (isset($_SESSION["user"])) {
 	<h1>Welcome to Muppet Chat!</h1>
 	<?php if ($logged_in): ?>
 		<p> Welcome <?= $user->email; ?> </p>
-		<p> *insert fyp here* </p>	
+		<div class="container">
+		<?php
+			$selectquery = " select * from posts ";
+			$result = mysqli_query($connection, $selectquery);
+
+			while ($data = mysqli_fetch_assoc($result)) {
+		?>
+			<div class="card">
+				<img src="./image/<?php echo $data['post_image']; ?>" class="card_image">
+				<div class="card_container">
+					<h4><b><?php echo $data['post_owner_id'];?></b></h4>
+					<?php echo $data['post_content'];?>
+				</div>
+			</div>
+			<br>
+
+		<?php
+			}
+		?>
+		</div>
 	<?php else: ?>
 		<div class="container">
 			<p>Join the fun and chat with your favorite Muppets!</p>

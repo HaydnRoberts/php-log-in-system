@@ -9,6 +9,6 @@ if ( ! isset($_POST["email"])) {
 
 $user = new User($connection, $_POST["email"], $_POST["password"]);
 $user->insert();
-var_dump($user);
-
+header("Location: index.php");
+exit();
 

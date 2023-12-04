@@ -1,4 +1,3 @@
-
 /* Style the form labels */
 label {
     display: block;
@@ -7,7 +6,8 @@ label {
 
 /* Style the form inputs */
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+textarea {
     width: 100%;
     padding: 0.5em;
     margin-bottom: 1em;
@@ -53,6 +53,7 @@ p {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     margin-top: 100px;
 }
 
@@ -83,5 +84,31 @@ p {
     left: 0;
     right: 0;
     margin-bottom: 100px;
+}
+
+textarea {
+    height: 150px;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 400px;
+    height: 800px;
+    border-radius: 5px;
+  }
+  
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+  .card_image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 5px 5px 0 0;
+  }
+  .card_container {
+    padding: 2px 16px;
   }
   
