@@ -27,7 +27,8 @@ if (isset($_SESSION["user"])) {
 	<?php if ($logged_in): ?>
 		<div class="container">
 		<?php
-			$selectquery = "SELECT * FROM posts WHERE post_owner_id LIKE '{$user->email}'";
+			$selectquery = "SELECT * FROM posts WHERE post_owner_id LIKE '{$user->email}' ORDER BY date DESC";
+
 			$result = mysqli_query($connection, $selectquery);
 
 			while ($data = mysqli_fetch_assoc($result)) {
@@ -35,8 +36,8 @@ if (isset($_SESSION["user"])) {
 			<div class="card">
 				<img src="./image/<?php echo $data['post_image']; ?>" class="card_image">
 				<div class="card_container">
-					<h4><b><?php echo $data['post_owner_id'];?></b></h4>
-					<?php echo $data['post_content'];?>
+					<h4><b><?php echo htmlspecialchars($data['post_owner_id']);?></b></h4>
+					<p style="overflow: auto; height: 300px;"><?php echo htmlspecialchars($data['post_content']);?></p>
                     <hr>
                     <a href="delete_post.php?id=<?= $data['id'] ?>" class="delete">Delete post</a>
 				</div>

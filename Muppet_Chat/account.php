@@ -25,7 +25,7 @@ if (isset($_SESSION["user"])) {
 
 	<h1>Account</h1>
 	<?php if ($logged_in): ?>
-		<p> <?= $user->email; ?> </p>
+		<p> <?= htmlspecialchars($user->email); ?> </p>
 
 		<div class="container">
             

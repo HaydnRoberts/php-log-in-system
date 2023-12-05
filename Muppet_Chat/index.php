@@ -25,10 +25,10 @@ if (isset($_SESSION["user"])) {
 
 	<h1>Welcome to Muppet Chat!</h1>
 	<?php if ($logged_in): ?>
-		<p> Welcome <?= $user->email; ?> </p>
+		<p> Welcome <?= htmlspecialchars($user->email); ?> </p>
 		<div class="container">
 		<?php
-			$selectquery = " select * from posts ";
+			$selectquery = " select * from posts ORDER BY date DESC";
 			$result = mysqli_query($connection, $selectquery);
 
 			while ($data = mysqli_fetch_assoc($result)) {
@@ -36,8 +36,8 @@ if (isset($_SESSION["user"])) {
 			<div class="card">
 				<img src="./image/<?php echo $data['post_image']; ?>" class="card_image">
 				<div class="card_container">
-					<h4><b><?php echo $data['post_owner_id'];?></b></h4>
-					<?php echo $data['post_content'];?>
+					<h4><b><?php echo htmlspecialchars($data['post_owner_id']);?></b></h4>
+					<p style="overflow: auto; height: 300px; text-align"><?php echo htmlspecialchars($data['post_content']);?></p>
 				</div>
 			</div>
 			<br>

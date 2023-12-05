@@ -44,11 +44,14 @@ if (move_uploaded_file($tempname, $folder)) {
 
 // Prepare the SQL statement
 if ($post_image === null) {
-    $query = "INSERT INTO `posts` (`post_owner_id`, `post_content`) VALUES ('{$user->email}', '{$post_content}')";
+    $query = "INSERT INTO `posts` (`post_owner_id`, `post_content`) VALUES (?, ?)";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("ss", $user->email, $post_content);
 } else {
-    $query = "INSERT INTO `posts` (`post_owner_id`, `post_content`, `post_image`) VALUES ('{$user->email}', '{$post_content}', '{$post_image}')";
+    $query = "INSERT INTO `posts` (`post_owner_id`, `post_content`, `post_image`) VALUES (?, ?, ?)";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("sss", $user->email, $post_content, $post_image);
 }
-$stmt = $connection->prepare($query);
 // Execute the statement
 $stmt->execute();
 
