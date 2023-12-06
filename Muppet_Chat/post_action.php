@@ -16,24 +16,13 @@ if (!$logged_in) {
 
 // Get the post content and image
 $post_content = $_POST['post_content'];
-/*if (isset($_FILES["post_image"])) {
-    $image = $_FILES['post_image']['tmp_name'];
-    $image_type = $_FILES['post_image']['type'];
-    if ($image_type == 'image/jpeg') {
-        $post_image = fopen($image, 'rb');
-    } else {
-        $image = imagecreatefromstring(file_get_contents($image));
-        ob_start();
-        imagejpeg($image);
-        $post_image = ob_get_clean();
-    }
-} else {
-    $post_image = null;
-}
-*/
 $post_image = $_FILES["post_image"]["name"];
 $tempname = $_FILES["post_image"]["tmp_name"];
-$folder = "./image/" . $post_image;
+
+// Generate a unique name for the uploaded image
+$extension = pathinfo($post_image, PATHINFO_EXTENSION);
+$new_image_name = uniqid() . '.' . $extension;
+$folder = "./image/" . $new_image_name;
 
 // Now let's move the uploaded image into the folder: image
 if (move_uploaded_file($tempname, $folder)) {
@@ -50,7 +39,7 @@ if ($post_image === null) {
 } else {
     $query = "INSERT INTO `posts` (`post_owner_id`, `post_content`, `post_image`) VALUES (?, ?, ?)";
     $stmt = $connection->prepare($query);
-    $stmt->bind_param("sss", $user->email, $post_content, $post_image);
+    $stmt->bind_param("sss", $user->email, $post_content, $new_image_name);
 }
 // Execute the statement
 $stmt->execute();
@@ -58,4 +47,3 @@ $stmt->execute();
 // Redirect to the home page
 header('Location: index.php');
 exit();
-?>
