@@ -35,6 +35,7 @@ body {
     background-color: #f1f1f1;
     font-family: Arial, sans-serif;
     font-size: 16px;
+    text-align: center;
 }
 
 h1 {
@@ -45,7 +46,6 @@ h1 {
 
 p {
     font-size: 20px;
-    text-align: center;
     margin-top: 30px;
 }
 
@@ -87,29 +87,34 @@ p {
 }
 
 textarea {
-    height: 150px;
+    height: 300px;
+    width: 400px;
 }
 
 .card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
+    transition: 0.1s;
     width: 400px;
     height: 800px;
     border-radius: 5px;
+    text-align: left;
   }
   
   .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+
   }
 
   .card_image {
-    width: 100%;
+    width: 400px;
     height: 400px;
     object-fit: cover;
     border-radius: 5px 5px 0 0;
   }
+
   .card_container {
     padding: 2px 16px;
+    margin-bottom: -25px;
   }
   
   .delete {
@@ -120,5 +125,4 @@ textarea {
     border-radius: 5px;
     font-size: 18px;
     cursor: pointer;
-    margin-top: 30px;
 }

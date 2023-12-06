@@ -23,8 +23,9 @@ if (isset($_SESSION["user"])) {
 	nav();
 	?>
 
-	<h1>View your posts <?= $user->email; ?>!</h1>
+	
 	<?php if ($logged_in): ?>
+        <h1>View your posts <?= htmlspecialchars($user->email); ?>!</h1>
 		<div class="container">
 		<?php
 			$selectquery = "SELECT * FROM posts WHERE post_owner_id LIKE '{$user->email}' ORDER BY date DESC";
@@ -38,10 +39,9 @@ if (isset($_SESSION["user"])) {
 				<div class="card_container">
 					<h4><b><?php echo htmlspecialchars($data['post_owner_id']);?></b></h4>
 					<p style="overflow: auto; height: 300px;"><?php echo htmlspecialchars($data['post_content']);?></p>
-                    <hr>
-                    <a href="delete_post.php?id=<?= $data['id'] ?>" class="delete">Delete post</a>
+                    
 				</div>
-                
+                <a href="delete_post.php?id=<?= $data['id'] ?>" class="delete">Delete post</a>
 			</div>
 			<br>
 
