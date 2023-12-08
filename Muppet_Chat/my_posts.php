@@ -41,7 +41,7 @@ if (isset($_SESSION["user"])) {
 					<p style="overflow: auto; height: 300px;"><?php echo htmlspecialchars($data['post_content']);?></p>
                     
 				</div>
-                <a href="delete_post.php?id=<?= $data['id'] ?>" class="delete">Delete post</a>
+                <a href="delete_post.php?id=<?= $data['id'] ?>" class="delete" onclick="return confirm('Are you sure you want to delete this post?');">Delete post</a>
 			</div>
 			<br>
 
