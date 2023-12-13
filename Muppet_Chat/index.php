@@ -135,12 +135,11 @@ if (isset($_SESSION["user"])) {
 				<div class="reply-card" style="display: none;">
 					<?php 
 					if (!empty($reply_contents) && !empty($reply_users) && !empty($reply_ids)) {
-
+						$comment_number = 0;
 						foreach ($reply_ids as $reply_id) {
 							// Retrieve corresponding content and user for the current $reply_id
-							$reply_id -= 1;
-							$reply_user = $reply_users[$reply_id];
-							$reply_content = $reply_contents[$reply_id];
+							$reply_user = $reply_users[$comment_number];
+							$reply_content = $reply_contents[$comment_number];
 							// If content is not empty and user is found
 							if (!empty($reply_content) && !empty($reply_user)) {
 								// Converts user id into user email
@@ -153,14 +152,17 @@ if (isset($_SESSION["user"])) {
 									echo '<p style="padding: 5px;">' . $reply_user_email . ': ' . $reply_content . '</p>';
 								}
 							}
+							$comment_number += 1;
 						}
 					} else {
-						echo "There are no replys yet";
+						echo "<p style='padding: 5px;'>There are no replys yet</p>";
 					}
 					
 					?>
-					<textarea style="height: 100px; width: 380px;" class="new-content" id="myTextarea"></textarea>
-					<button class="reply-btn" data-postid="<?php echo $post_id; ?>" data-new-content="">Submit Reply</button>
+					<form class="replyForm">
+						<textarea style="height: 100px; width: 380px;" class="new-content"></textarea>
+						<button type="submit" class="reply-btn" data-postid="<?php echo $post_id; ?>">Submit Reply</button>
+					</form>
 				</div>
                 <br>
 			</div>
@@ -168,19 +170,22 @@ if (isset($_SESSION["user"])) {
             }
             ?>
             <script>
-			var textarea = document.getElementById('myTextarea');
-			textarea.addEventListener('input', function() {
-				var newContent = textarea.value;
-				button.setAttribute('data-new-content', newContent);
-			});
 
 			document.addEventListener("DOMContentLoaded", function () {
 				document.querySelectorAll('.like-btn, .dislike-btn').forEach(function (button) {
 					button.addEventListener('click', function () {
+						event.preventDefault();
 						handleLikeDislike(this);
 					});
 				});
-
+				
+				document.querySelectorAll('.replyForm').forEach(function (form) {
+					form.addEventListener('submit', function (event) {
+						event.preventDefault();
+						handleReply(this);
+					});
+				});
+				
 				function handleLikeDislike(button) {
 					var post_id = button.getAttribute('data-postid');
 					var user_id = <?php echo $user_id; ?>;
@@ -208,34 +213,27 @@ if (isset($_SESSION["user"])) {
 					
 				}
 
+				function handleReply(form) {
+				var post_id = form.querySelector('.reply-btn').getAttribute('data-postid');
+				var user_id = <?php echo $user_id; ?>;
+				var new_content = form.querySelector('.new-content').value;
 
-				document.querySelectorAll('.reply-btn').forEach(function (button) {
-					button.addEventListener('click', function () {
-						handleLikeReply(this);
-					});
-				});
+				var formData = new FormData();
+				formData.append('post_id', post_id);
+				formData.append('user_id', user_id);
+				formData.append('new_content', new_content);
 
-				function handleLikeReply(button) {
-					var post_id = button.getAttribute('data-postid');
-					var user_id = <?php echo $user_id; ?>;
-					var new_content = button.getAttribute('data-new-content');
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', 'reply.php', true);
+				xhr.onload = function () {
+					// Handle the response if needed
+					// location.reload();
+				};
+				xhr.send(formData);
 
-					var formData = new FormData();
-					formData.append('post_id', post_id);
-					formData.append('user_id', user_id);
-					formData.append('new_content', new_content);
-
-					var xhr = new XMLHttpRequest();
-					xhr.open('POST', 'reply.php', true);
-					xhr.onload = function () {
-						// Handle the response if needed
-						//location.reload();
-					};
-					xhr.send(formData);
-					
-				}
-			});
-
+				return false;
+			}
+		});
 		</script>
 
         </div>
