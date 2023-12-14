@@ -1,6 +1,5 @@
 <?php
 include_once "user.php";
-include_once "db.php"; // Ensure the connection is included
 
 session_start();
 $logged_in = false;

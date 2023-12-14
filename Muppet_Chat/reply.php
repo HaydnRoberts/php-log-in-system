@@ -20,13 +20,14 @@ if (isset($_POST['post_id'], $_POST['user_id'], $_POST['new_content'])) {
     $post_id = $_POST['post_id'];
     $user_id = $_POST['user_id'];
     $new_content = $_POST['new_content'];
+    $ping_owner = 1;
 
     print("post id: " . $post_id . " user id: " . $user_id . " new content: " . $new_content);
     // Update or insert the like in the database
     
-    $query = "INSERT INTO `reply` (post_id, user_id, content) VALUES (?, ?, ?)";
+    $query = "INSERT INTO `reply` (post_id, user_id, content, ping_owner) VALUES (?, ?, ?, ?)";
     $stmt = mysqli_prepare($connection, $query);
-    mysqli_stmt_bind_param($stmt, 'iis', $post_id, $user_id, $new_content);
+    mysqli_stmt_bind_param($stmt, 'iisi', $post_id, $user_id, $new_content, $ping_owner);
     mysqli_stmt_execute($stmt);
 
 

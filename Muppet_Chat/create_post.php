@@ -10,9 +10,15 @@ session_start();
     <link href='style.css' rel='stylesheet'>
 </head>
 <body>
-    <?php 
-    include_once "db.php"; 
-    nav();
+<?php 
+	include_once "notification_action.php";
+	if ($ping_posts){
+		$count = count($ping_posts);
+	} else{
+		$count = 0;
+	}
+	include_once "db.php";
+    nav($count);
     ?>
     <h1>Create a post</h1>
     <div class="container">
@@ -20,7 +26,7 @@ session_start();
             <p>Write your post</p>
             <textarea name="post_content"></textarea>
             <p>Add an image</p>
-            <input type="file" name="post_image" accept="image/png, image/jpeg" />
+            <input type="file" name="post_image" accept="image/png, image/jpeg, image/gif" />
             <hr>
             <button type="submit" class="btn">POST!</button>
         </form>

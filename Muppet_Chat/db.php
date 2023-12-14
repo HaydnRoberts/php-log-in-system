@@ -1,13 +1,12 @@
 <?php
-function nav() {
+function nav($count) {
     echo '
     <nav class="navbar">
 		<a href="index.php"><img src="../icons/icons8-home-50.png"></a>
 		<a href="create_post.php"><img src="../icons/icons8-message-48.png"></a>
 		<a href="my_posts.php"><img src="../icons/icons8-news-48.png"></a>';
 		
-		$notification = false;
-		if($notification){
+		if($count >= 1){
 		echo '<a href="notifications.php"><img src="../icons/icons8-notification-48 (1).png"></a>';
 		} else{
 		echo '<a href="notifications.php"><img src="../icons/icons8-notification-48.png"></a>';
