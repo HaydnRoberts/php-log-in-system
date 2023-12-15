@@ -7,9 +7,16 @@
     <link href='style.css' rel='stylesheet'>
 </head>
 <body>
-    <?php include_once "db.php"; 
-	nav();
-	?>
+    <?php 
+	include_once "notification_action.php";
+	if ($ping_posts){
+		$count = count($ping_posts);
+	} else{
+		$count = 0;
+	}
+	include_once "db.php";
+    nav($count);
+    ?>
 
     <div style="padding: 50px; margin-top: 3em;">
         <h1>Sign up for an account</h1>

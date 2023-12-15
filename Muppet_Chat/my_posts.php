@@ -19,9 +19,16 @@ if (isset($_SESSION["user"])) {
 </head>
 <body>
 
-	<?php include_once "db.php"; 
-	nav();
-	?>
+<?php 
+	include_once "notification_action.php";
+	if ($ping_posts){
+		$count = count($ping_posts);
+	} else{
+		$count = 0;
+	}
+	include_once "db.php";
+    nav($count);
+    ?>
 
 	
 	<?php if ($logged_in): ?>

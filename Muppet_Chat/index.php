@@ -33,7 +33,7 @@ if (isset($_SESSION["user"])) {
 
     <?php 
 	include_once "notification_action.php";
-	if ($ping_posts){
+	if (!$ping_posts == null){
 		$count = count($ping_posts);
 	} else{
 		$count = 0;
