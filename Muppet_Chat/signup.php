@@ -20,7 +20,8 @@
 
     <div style="padding: 50px; margin-top: 3em;">
         <h1>Sign up for an account</h1>
-
+        <p>Terms of Service</p>
+        <iframe src='ToS.txt' width='800' height='400' frameBorder='0' style="padding-bottom: 20px;"></iframe>
         <form action="signup-action.php" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address</label>
@@ -30,7 +31,8 @@
                 <label for="exampleInputPassword1" class="form-label">Password</label>
                 <input name="password" type="password" class="form-control" id="exampleInputPassword1">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            
+            <button type="submit" class="btn btn-primary" onclick="return confirm('You must consent to the terms of service to continue');">Submit</button>
         </form>
     </div>
 </body>

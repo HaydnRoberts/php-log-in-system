@@ -35,6 +35,8 @@ if (isset($_SESSION["user"])) {
 		<p> <?= htmlspecialchars($user->email); ?> </p>
 
 		<div class="container">
+		<p>Terms of Service</p>
+        <iframe src='ToS.txt' width='800' height='400' frameBorder='0' style="padding-bottom: 20px;"></iframe>
             
 			<a href="logout.php" class="btn">Log out</a>
 		</div>	
