@@ -31,8 +31,9 @@ $count = is_array($ping_posts ?? null) ? count($ping_posts) : 0;
 	<div class="packet">IPv4 Src 192.168.12.1 → Dst 192.168.12.2 TTL 255</div>
 	<div class="packet">Ethernet II aa:bb:cc:00:01:10 → aa:bb:cc:00:02:10</div>
 	<div class="packet">ICMP Echo Request • Frame 114 bytes • eth1</div>
-	<div class="packet">Total Length: 100 • Flags: 0x0 • Fragment Offset: 0</div>
-	<div class="packet">Protocol: ICMP (1) • Header Checksum: 0x2245</div>
+	<div class="packet">Frame 3: Packet, 114 bytes on wire (912 bits), 114 bytes captured (912 bits) on interface eth1, id 0</div>
+	<div class="packet">Total Length: 100 Identification: 0x0000 (0) 000. .... = Flags: 0x0 0... .... = Reserved bit: Not set .0.. .... = Don't fragment: Not set ..0. .... = More fragments: Not set ...0 0000 0000 0000 = Fragment Offset: 0</div>
+	<div class="packet">Protocol: ICMP (1) Header Checksum: 0x2245 [validation disabled] [Header checksum status: Unverified] Source Address: 192.168.12.1 Destination Address: 192.168.12.2</div>
 </div>
 
 <main class="feed">
