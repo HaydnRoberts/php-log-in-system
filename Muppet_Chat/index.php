@@ -94,8 +94,9 @@ $reply_count = mysqli_num_rows($replies);
 
 <footer class="post-actions">
 
-<button class="icon-btn <?= ($user_reaction && $user_reaction['likes']) ? 'active' : '' ?>"
-        onclick="react(<?= $post_id ?>,'like')">
+<button class="icon-btn like-btn <?= ($user_reaction && $user_reaction['likes']) ? 'active' : '' ?>"
+        data-post="<?= $post_id ?>"
+        onclick="react(this,'like')">
     <img 
         src="../icons/<?= ($user_reaction && $user_reaction['likes']) ? 'like_clicked.png' : 'like.png' ?>" 
         alt="Like"
@@ -108,8 +109,9 @@ $reply_count = mysqli_num_rows($replies);
     <span><?= $reply_count ?></span>
 </button>
 
-<button class="icon-btn <?= ($user_reaction && $user_reaction['dislikes']) ? 'active' : '' ?>"
-        onclick="react(<?= $post_id ?>,'dislike')">
+<button class="icon-btn dislike-btn <?= ($user_reaction && $user_reaction['dislikes']) ? 'active' : '' ?>"
+        data-post="<?= $post_id ?>"
+        onclick="react(this,'dislike')">
     <img 
         src="../icons/<?= ($user_reaction && $user_reaction['dislikes']) ? 'dislike_clicked.png' : 'dislike.png' ?>" 
         alt="Dislike"
@@ -159,13 +161,53 @@ function toggleReply(id){
 	document.getElementById('reply-'+id).classList.toggle('open');
 }
 
-function react(post, action){
-	const fd = new FormData();
-	fd.append('post_id', post);
-	fd.append('user_id', <?= $user_id ?? 0 ?>);
-	fd.append('action', action);
-	fetch('like.php', { method:'POST', body:fd })
-		.then(() => location.reload());
+function react(button, action) {
+  const postId = button.dataset.post;
+  const post = button.closest('.post');
+
+  const likeBtn = post.querySelector('.like-btn');
+  const dislikeBtn = post.querySelector('.dislike-btn');
+
+  const likeCount = likeBtn.querySelector('span');
+  const dislikeCount = dislikeBtn.querySelector('span');
+
+  const fd = new FormData();
+  fd.append('post_id', postId);
+  fd.append('user_id', <?= $user_id ?>);
+  fd.append('action', action);
+
+  fetch('like.php', { method: 'POST', body: fd })
+    .then(() => {
+      // optimistic UI update
+      if (action === 'like') {
+        if (!likeBtn.classList.contains('active')) {
+          likeBtn.classList.add('active');
+          likeBtn.querySelector('img').src = '../icons/like_clicked.png';
+          likeCount.textContent = parseInt(likeCount.textContent) + 1;
+
+          // undo dislike if needed
+          if (dislikeBtn.classList.contains('active')) {
+            dislikeBtn.classList.remove('active');
+            dislikeBtn.querySelector('img').src = '../icons/dislike.png';
+            dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
+          }
+        }
+      }
+
+      if (action === 'dislike') {
+        if (!dislikeBtn.classList.contains('active')) {
+          dislikeBtn.classList.add('active');
+          dislikeBtn.querySelector('img').src = '../icons/dislike_clicked.png';
+          dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
+
+          if (likeBtn.classList.contains('active')) {
+            likeBtn.classList.remove('active');
+            likeBtn.querySelector('img').src = '../icons/like.png';
+            likeCount.textContent = parseInt(likeCount.textContent) - 1;
+          }
+        }
+      }
+    });
 }
 
 function sendReply(e, id){

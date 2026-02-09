@@ -16,7 +16,7 @@ CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     post_owner_id VARCHAR(255) NOT NULL,
     post_content TEXT NOT NULL,
-    post_image VARCHAR(255),
+    post_image VARCHAR(255), - THIS IS A PLACEHOLDER AND VERY WRONG, I think it needs to be blob but im having trouble making it work
     date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -121,9 +121,16 @@ body{
   color:#9d8cff;
 }
 
-.icon-btn.active img{
-  opacity:1;
+.icon-btn.active img {
+  animation: pop .25s ease;
 }
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
 
 
 /* ---------- REPLIES ---------- */
