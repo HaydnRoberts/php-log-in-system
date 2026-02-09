@@ -18,6 +18,18 @@
     nav($count);
     ?>
 
+    <?php if (isset($_GET["error"])): ?>
+        <p style="color: red;">
+            <?php
+            if ($_GET["error"] === "email_exists") {
+                echo "That email is already registered.";
+            } elseif ($_GET["error"] === "missing_fields") {
+                echo "Please fill in all fields.";
+            }
+            ?>
+        </p>
+    <?php endif; ?>
+
     <div style="padding: 50px; margin-top: 3em;">
         <h1>Sign up for an account</h1>
         <p>Terms of Service</p>
