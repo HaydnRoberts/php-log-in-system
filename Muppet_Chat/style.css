@@ -1,196 +1,193 @@
-/* =====================
-   Design Tokens
-===================== */
+/* ---------- Base ---------- */
+
 :root {
-  --bg: #0f172a;
-  --surface: #111827;
-  --surface-hover: #1f2933;
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --accent: #3b82f6;
-  --danger: #ef4444;
-  --radius: 14px;
+  --bg-main: #1c2233;
+  --bg-feed: #232a3d;
+  --card-bg: #2b3350;
+  --muted: #9aa4c7;
+  --accent: #6f8cff;
+  --border: #3a4370;
 }
 
-/* =====================
-   Base Styles
-===================== */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(180deg, #161b2d, var(--bg-main));
+  color: #e6e9f5;
 }
 
-h1 {
-  text-align: center;
-  margin-top: 6rem;
-  font-weight: 600;
-}
+/* ---------- Navbar ---------- */
 
-.container {
+.navbar {
+  position: sticky;
+  top: 0;
+  background: #2f3a5e;
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding-bottom: 3rem;
+  justify-content: space-around;
+  padding: 12px 0;
+  z-index: 100;
 }
 
-/* =====================
-   Post Card
-===================== */
-.post {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 1rem;
+.navbar img {
+  width: 26px;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+
+.navbar img:hover {
+  opacity: 1;
+}
+
+/* ---------- Layout ---------- */
+
+.feed {
   max-width: 520px;
   margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.page-title {
+  text-align: center;
+  color: var(--accent);
+  margin-bottom: 32px;
+}
+
+/* ---------- Post Card ---------- */
+
+.post-card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
   box-shadow: 0 10px 25px rgba(0,0,0,.25);
-  transition: transform .25s ease, box-shadow .25s ease;
-  animation: breathe 6s ease-in-out infinite alternate;
+  transition: box-shadow .15s ease;
 }
 
-.post:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 40px rgba(0,0,0,.4);
+.post-card:hover {
+  box-shadow: 0 14px 35px rgba(0,0,0,.35);
 }
 
-@keyframes breathe {
-  from { box-shadow: 0 10px 25px rgba(0,0,0,.25); }
-  to   { box-shadow: 0 14px 35px rgba(0,0,0,.35); }
-}
+/* ---------- Header ---------- */
 
-/* =====================
-   Post Header
-===================== */
 .post-header {
   display: flex;
   align-items: center;
-  gap: .75rem;
-  margin-bottom: .75rem;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), #60a5fa);
+  background: linear-gradient(135deg, #6f8cff, #8fd3f4);
 }
 
 .username {
   font-weight: 600;
-  font-size: .95rem;
 }
 
-/* =====================
-   Post Content
-===================== */
-.post-content {
+/* ---------- Content ---------- */
+
+.post-text {
+  margin: 12px 0;
   line-height: 1.5;
-  margin-bottom: .75rem;
-  color: var(--text);
 }
 
 .post-image {
   width: 100%;
   border-radius: 10px;
-  margin-top: .5rem;
+  margin-top: 12px;
 }
 
-/* =====================
-   Actions
-===================== */
+/* ---------- Actions ---------- */
+
 .post-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: .75rem;
+  margin-top: 12px;
 }
 
-.action {
-  background: transparent;
+.icon-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
   border: none;
   color: var(--muted);
-  font-size: .95rem;
   cursor: pointer;
-  transition: transform .15s ease, color .15s ease;
 }
 
-.action:hover {
-  color: var(--text);
-  transform: scale(1.15);
+.icon-btn img {
+  width: 18px;
+  filter: brightness(0.9);
 }
 
-.action.liked {
-  color: #ef4444;
-  animation: pop .3s ease;
+.icon-btn.active {
+  color: var(--accent);
 }
 
-@keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.4); }
-  100% { transform: scale(1); }
+/* ---------- Replies ---------- */
+
+.replies {
+  display: none;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  padding-top: 12px;
 }
 
-/* =====================
-   Replies
-===================== */
-.reply-card {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height .4s ease, opacity .3s ease;
-  margin-top: .75rem;
-  background: var(--surface-hover);
-  border-radius: 10px;
-  padding: 0 1rem;
+.replies.open {
+  display: block;
 }
 
-.reply-card.open {
-  max-height: 500px;
-  opacity: 1;
-  padding: 1rem;
+.reply {
+  padding: 8px 0;
 }
 
-.reply-card p {
-  font-size: .9rem;
+.reply-user {
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.reply p {
+  margin: 4px 0 0;
+  color: #dce1ff;
+}
+
+.no-replies {
   color: var(--muted);
+  font-size: 0.9rem;
 }
 
-/* =====================
-   Reply Form
-===================== */
-.replyForm textarea {
+/* ---------- Reply Form ---------- */
+
+.reply-form {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+
+.reply-form textarea {
   width: 100%;
   resize: none;
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid #1f2933;
+  padding: 8px;
   border-radius: 8px;
-  padding: .5rem;
-  margin-top: .5rem;
+  border: 1px solid var(--border);
+  background: #1c2233;
+  color: white;
 }
 
-.replyForm button {
-  margin-top: .5rem;
+.reply-form button {
+  margin-top: 8px;
   background: var(--accent);
   border: none;
   color: white;
-  padding: .5rem .75rem;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-}
-
-/* =====================
-   Buttons (generic)
-===================== */
-.btn {
-  background: var(--accent);
-  color: white;
-  padding: .75rem 1.25rem;
-  border-radius: 8px;
-  text-decoration: none;
-  display: inline-block;
 }

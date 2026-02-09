@@ -1,7 +1,7 @@
 <?php
 include_once "user.php";
-// this is the session start on every page, this determines who the user is and if they are logged in
 session_start();
+
 $logged_in = false;
 if (isset($_SESSION["user"])) {
     $logged_in = true;
@@ -10,158 +10,144 @@ if (isset($_SESSION["user"])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muppet Chat</title>
-    <link href='style.css' rel='stylesheet'>
-	<script>
-		// this code was to click on a card to scroll to it, it is a cool feature but it will be turned into an opt in feature instead as is not very useful for most users
-		/* document.addEventListener("DOMContentLoaded", function () {
-		document.querySelectorAll('.card').forEach(function (card) {
-			card.addEventListener('click', function () {
-				this.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			});
-		});
-	});
-	*/
-	</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <?php 
-	include_once "notification_action.php";
-	if (!$ping_posts == null){
-		$count = count($ping_posts);
-	} else{
-		$count = 0;
-	}
-	include_once "db.php";
-    nav($count);
-    ?>
+<?php
+include_once "notification_action.php";
+include_once "db.php";
+$count = is_array($ping_posts) ? count($ping_posts) : 0;
+nav($count);
+?>
 
-    <h1>Welcome to Muppet Chat!</h1>
-    <?php if ($logged_in) : ?>
-		<div class="container">
-		<?php
-		$selectquery = "SELECT * FROM posts ORDER BY date DESC";
-		$result = mysqli_query($connection, $selectquery);
+<main class="feed">
 
-		$email = $user->email;
-		$user_query = "SELECT id FROM users WHERE email = '$email'";
-		$user_result = mysqli_query($connection, $user_query);
-		$user_data = mysqli_fetch_assoc($user_result);
-		$user_id = $user_data['id'];
+<h1 class="page-title">Welcome to Muppet Chat</h1>
 
-		while ($data = mysqli_fetch_assoc($result)):
-		$post_id = $data['id'];
+<?php if ($logged_in): ?>
 
-		$mylikes = mysqli_query($connection, "SELECT * FROM likes WHERE post_id=$post_id AND user_id=$user_id");
-		$alllikes = mysqli_num_rows(mysqli_query($connection, "SELECT * FROM likes WHERE post_id=$post_id AND likes=1"));
-		$alldislikes = mysqli_num_rows(mysqli_query($connection, "SELECT * FROM likes WHERE post_id=$post_id AND dislikes=1"));
+<?php
+$email = $user->email;
+$user_query = mysqli_query($connection, "SELECT id FROM users WHERE email='$email'");
+$user_id = mysqli_fetch_assoc($user_query)['id'];
 
-		$row_exists = mysqli_num_rows($mylikes) === 1;
-		$row = $row_exists ? mysqli_fetch_assoc($mylikes) : null;
+$posts = mysqli_query($connection, "SELECT * FROM posts ORDER BY date DESC");
+?>
 
-		$replys = mysqli_query($connection, "SELECT * FROM reply WHERE post_id=$post_id");
-		$reply_count = mysqli_num_rows($replys);
-		?>
-		<article class="post">
-		<header class="post-header">
-			<div class="avatar"></div>
-			<span class="username"><?= htmlspecialchars($data['post_owner_id']) ?></span>
-		</header>
+<?php while ($post = mysqli_fetch_assoc($posts)): ?>
+<?php
+$post_id = $post['id'];
 
-		<p class="post-content"><?= htmlspecialchars($data['post_content']) ?></p>
+$mylike_q = mysqli_query($connection, "SELECT * FROM likes WHERE post_id=$post_id AND user_id=$user_id");
+$my_like = mysqli_num_rows($mylike_q) === 1 ? mysqli_fetch_assoc($mylike_q) : null;
 
-		<?php if (!empty($data['post_image'])): ?>
-			<img class="post-image" src="./image/<?= $data['post_image'] ?>">
-		<?php endif; ?>
+$likes = mysqli_num_rows(mysqli_query($connection, "SELECT id FROM likes WHERE post_id=$post_id AND likes=1"));
+$dislikes = mysqli_num_rows(mysqli_query($connection, "SELECT id FROM likes WHERE post_id=$post_id AND dislikes=1"));
 
-		<footer class="post-actions">
-			<button class="action <?= ($row_exists && $row['likes']) ? 'liked' : '' ?>"
-					onclick="handleLike(<?= $post_id ?>)">
-			❤️ <?= $alllikes ?>
-			</button>
+$replies = mysqli_query($connection, "SELECT r.*, u.email FROM reply r JOIN users u ON r.user_id=u.id WHERE r.post_id=$post_id");
+$reply_count = mysqli_num_rows($replies);
+?>
 
-			<button class="action" onclick="toggleReply(<?= $post_id ?>)">
-			💬 <?= $reply_count ?>
-			</button>
+<article class="post-card">
 
-			<button class="action" onclick="handleDislike(<?= $post_id ?>)">
-			👎 <?= $alldislikes ?>
-			</button>
-		</footer>
+<header class="post-header">
+    <div class="avatar"></div>
+    <span class="username"><?= htmlspecialchars($post['post_owner_id']) ?></span>
+</header>
 
-		<div class="reply-card" id="reply-<?= $post_id ?>">
-			<?php if ($reply_count): ?>
-			<?php while ($reply = mysqli_fetch_assoc($replys)): ?>
-				<p><?= htmlspecialchars($reply['content']) ?></p>
-			<?php endwhile; ?>
-			<?php else: ?>
-			<p>No replies yet</p>
-			<?php endif; ?>
+<p class="post-text"><?= htmlspecialchars($post['post_content']) ?></p>
 
-			<form class="replyForm" onsubmit="submitReply(event, <?= $post_id ?>)">
-			<textarea></textarea>
-			<button type="submit">Reply</button>
-			</form>
-		</div>
-		</article>
-		<?php endwhile; ?>
-		</div>
+<?php if (!empty($post['post_image'])): ?>
+<img class="post-image" src="./image/<?= htmlspecialchars($post['post_image']) ?>">
+<?php endif; ?>
 
+<footer class="post-actions">
+    <button class="icon-btn <?= ($my_like && $my_like['likes']) ? 'active' : '' ?>"
+        onclick="react(<?= $post_id ?>, 'like')">
+        <img src="icons/like.png">
+        <span><?= $likes ?></span>
+    </button>
 
-		<script>
-function toggleReply(id) {
-  document.getElementById("reply-" + id).classList.toggle("open");
+    <button class="icon-btn" onclick="toggleReplies(<?= $post_id ?>)">
+        <img src="icons/icons8-message-48.png">
+        <span><?= $reply_count ?></span>
+    </button>
+
+    <button class="icon-btn <?= ($my_like && $my_like['dislikes']) ? 'active' : '' ?>"
+        onclick="react(<?= $post_id ?>, 'dislike')">
+        <img src="icons/dislike.png">
+        <span><?= $dislikes ?></span>
+    </button>
+</footer>
+
+<section class="replies" id="replies-<?= $post_id ?>">
+<?php if ($reply_count): ?>
+<?php while ($reply = mysqli_fetch_assoc($replies)): ?>
+<div class="reply">
+    <span class="reply-user"><?= htmlspecialchars($reply['email']) ?></span>
+    <p><?= htmlspecialchars($reply['content']) ?></p>
+</div>
+<?php endwhile; ?>
+<?php else: ?>
+<p class="no-replies">No replies yet</p>
+<?php endif; ?>
+
+<form class="reply-form" onsubmit="submitReply(event, <?= $post_id ?>)">
+    <textarea placeholder="Add a reply…"></textarea>
+    <button type="submit">Reply</button>
+</form>
+</section>
+
+</article>
+
+<?php endwhile; ?>
+
+<?php else: ?>
+
+<div class="logged-out">
+    <p>Join the fun and chat with your favorite Muppets!</p>
+    <a href="signup.php" class="btn">Sign Up</a>
+    <a href="login.php" class="btn">Log In</a>
+</div>
+
+<?php endif; ?>
+
+</main>
+
+<script>
+function toggleReplies(id) {
+    document.getElementById('replies-' + id).classList.toggle('open');
 }
 
-function handleLike(postId) {
-  sendAction(postId, 'like');
-}
+function react(postId, action) {
+    const fd = new FormData();
+    fd.append('post_id', postId);
+    fd.append('user_id', <?= $user_id ?? 0 ?>);
+    fd.append('action', action);
 
-function handleDislike(postId) {
-  sendAction(postId, 'dislike');
-}
-
-function sendAction(postId, action) {
-  const formData = new FormData();
-  formData.append('post_id', postId);
-  formData.append('user_id', <?= $user_id ?>);
-  formData.append('action', action);
-
-  fetch('like.php', { method: 'POST', body: formData })
-    .then(() => location.reload());
+    fetch('like.php', { method: 'POST', body: fd })
+        .then(() => location.reload());
 }
 
 function submitReply(e, postId) {
-  e.preventDefault();
-  const textarea = e.target.querySelector('textarea');
+    e.preventDefault();
+    const text = e.target.querySelector('textarea').value;
 
-  const formData = new FormData();
-  formData.append('post_id', postId);
-  formData.append('user_id', <?= $user_id ?>);
-  formData.append('new_content', textarea.value);
+    const fd = new FormData();
+    fd.append('post_id', postId);
+    fd.append('user_id', <?= $user_id ?? 0 ?>);
+    fd.append('new_content', text);
 
-  fetch('reply.php', { method: 'POST', body: formData })
-    .then(() => location.reload());
+    fetch('reply.php', { method: 'POST', body: fd })
+        .then(() => location.reload());
 }
 </script>
 
-
-	</div>
-	<?php else : ?>
-	<div class="container">
-		<p>Join the fun and chat with your favorite Muppets!</p>
-		<a href="signup.php" class="btn">Sign Up</a>
-		<a href="login.php" class="btn">Log In</a>
-	</div>
-
-    <?php endif; ?>
-
 </body>
-
 </html>
