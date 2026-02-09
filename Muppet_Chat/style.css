@@ -106,16 +106,25 @@ body{
   display:flex;
   align-items:center;
   gap:.4rem;
-  transition:transform .15s ease,color .15s ease;
+  transition:transform .15s ease, color .15s ease;
 }
 
 .icon-btn img{
   width:20px;
+  height:20px;
   filter:invert(1);
+  opacity:.85;
 }
 
-.icon-btn:hover{transform:scale(1.1)}
-.icon-btn.active{color:#9d8cff}
+.icon-btn:hover{
+  transform:scale(1.1);
+  color:#9d8cff;
+}
+
+.icon-btn.active img{
+  opacity:1;
+}
+
 
 /* ---------- REPLIES ---------- */
 .reply-panel{
@@ -187,30 +196,55 @@ body{
   white-space:nowrap;
   font-family: "Courier New", monospace;
   font-size:12px;
-  color:rgba(0,255,120,.35);
+  color:rgba(0,255,120,.85);
   text-shadow:0 0 6px rgba(0,255,120,.6);
-  filter:blur(0.6px);
+  filter:blur(2px);
   opacity:0;
-  animation:packetDrift 18s linear infinite;
+  animation-timing-function: cubic-bezier(.4,.0,.2,1);
+
+  /* so that they pass the screen quickly but take a while to show up again */
+  animation:packetDrift 72s linear infinite;
+}
+.packet:nth-child(odd){
+  filter:blur(1px);
 }
 
+
 /* staggered packets */
-.packet:nth-child(1){ top:20%; animation-delay:2s }
-.packet:nth-child(2){ top:42%; animation-delay:9s }
-.packet:nth-child(3){ top:65%; animation-delay:16s }
+.packet:nth-child(1){ top:20%; animation-delay:-5s }
+.packet:nth-child(2){ top:42%; animation-delay:-18s }
+.packet:nth-child(3){ top:65%; animation-delay:-33s }
+.packet:nth-child(4){ top:86%; animation-delay:-47s }
+.packet:nth-child(5){ top:74%; animation-delay:-59s }
+.packet:nth-child(6){ top:34%; animation-delay:-71s }
 
 @keyframes packetDrift{
+    /* I needed help to make this work as I didnt understand animation delay very well */
+  /* hidden for most of the cycle */
   0%{
     transform:translateX(0);
     opacity:0;
   }
-  10%{opacity:.35}
-  90%{opacity:.35}
+  /* packet appears */
+  5%{
+    opacity:.35;
+  }
+  /* packet travels across screen */
+  10%{
+    transform:translateX(160vw);
+    opacity:.35;
+  }
+  /* packet fades out */
+  12%{
+    opacity:0;
+  }
+  /* stay hidden for the rest */
   100%{
     transform:translateX(160vw);
     opacity:0;
   }
 }
+
 
 /* ---------- MOTION ---------- */
 @keyframes fadeUp{
